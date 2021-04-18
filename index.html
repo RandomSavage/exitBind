@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .outer{
+        width:500px;
+        position:relative;
+    }
+
+    #container{
+        background:transparent;
+        width:500px;
+        position:absolute;
+        left:0;
+        top:0;
+        z-index:5;
+    }
+
+    .image{
+        width:500px;
+        position:absolute;
+        left:0;
+        top:0;
+    }
+</style>
+</head>
+<body>
+  <div class="outer">
+    <div id="container"></div>
+  </div>
+  <script src="https://unpkg.com/konva@7.0.3/konva.min.js" defer></script>
+  <script>
+
+    const outerContainer = document.querySelector('.outer');
+    const canvas = document.querySelector('#container');
+    const image = new Image();
+
+    let kContainerWidth;
+    let kContainerHeight;
+
+    image.onload = () => {
+       
+
+        // image.width = '500px';
+        // console.log('image width:', image.style.width);
+        // console.log('image height: ', image.style.height);
+
+
+        image.className = 'image';
+
+        // outerContainer.style.height = `${image.style.height}px`;
+        // canvas.style.height = `${image.style.height}px`;
+
+        // kContainerWidth = 500;
+        // kContainerHeight = image.style.height;
+
+        outerContainer.insertAdjacentElement('beforeend',image);
+        
+        // console.log('image width:', image.style.width);
+        // console.log('image height: ', image.style.height);
+
+        const styles = window.getComputedStyle(image)
+        console.log(styles.width)
+        console.log(styles)
+        // console.log(image.style);
+        // konvaInit();
+
+    }
+
+    image.src = './BMP.bmp';
+
+
+    function konvaInit(){
+
+        const stage = new Konva.Stage({
+        container: '#container', 
+        width: kContainerWidth, 
+        height: kContainerHeight
+        });
+
+        const layer = new Konva.Layer();
+
+        // ========== Top Outer ================
+
+        const topOuter = new Konva.Line({
+            points: [0, 5, 500, 5], 
+            stroke: 'blue', 
+            strokeWidth: 2, 
+            draggable: true, 
+            dragBoundFunc(pos){
+                return { 
+                x: this.absolutePosition().x, 
+                y: pos.y
+                }
+            }, 
+            hitStrokeWidth: 6,
+            lineCap: 'round'
+        });
+
+        topOuter.on('mouseover', () => {
+            stage.container().style.cursor = 'row-resize';
+        });
+
+        topOuter.on('dragstart', () => {
+            stage.container().style.cursor = 'row-resize';
+        });
+
+        topOuter.on('mouseleave', () => {
+            stage.container().style.cursor = 'default';
+        });
+
+        topOuter.on('dragend', () => {
+            stage.container().style.cursor = 'default';
+        });
+
+        // =========== Top Inner ==============
+
+        const topInner = new Konva.Line({
+            points: [0, 15, 500, 15], 
+            stroke: 'blue', 
+            strokeWidth: 2, 
+            draggable: true, 
+            dragBoundFunc(pos){
+                return { 
+                x: this.absolutePosition().x, 
+                y: pos.y
+                }
+            }, 
+            lineCap: 'round', 
+            hitStrokeWidth: 6,
+            dash: [20,5]
+        });
+
+        topInner.on('mouseover', () => {
+            stage.container().style.cursor = 'row-resize';
+        });
+
+        topInner.on('dragstart', () => {
+            stage.container().style.cursor = 'row-resize';
+        });
+
+        topInner.on('mouseleave', () => {
+            stage.container().style.cursor = 'default';
+        });
+
+        topInner.on('dragend', () => {
+            stage.container().style.cursor = 'default';
+        });
+
+        // ============== Bottom Outer ================
+
+        const bottomOuter = new Konva.Line({
+            points: [0, 295, 500, 295], 
+            stroke: 'red', 
+            strokeWidth: 2, 
+            text: 'bottom outer',
+            draggable: true, 
+            dragBoundFunc(pos){
+                return {
+                x: this.absolutePosition().x, 
+                y: pos.y
+                }
+            }, 
+            lineCap: 'round'
+        });
+
+        const bottomInner = new Konva.Line({
+            points: [0, 280, 500, 280], 
+            stroke: 'red', 
+            strokeWidth: 2, 
+            draggable: true, 
+            dragBoundFunc(pos){
+                return {
+                x: this.absolutePosition().x, 
+                y: pos.y
+                }
+            }, 
+            lineCap: 'round', 
+            dash: [20,5]
+        });
+
+        const leftOuter = new Konva.Line({
+            points: [5, 0, 5, 300], 
+            stroke: 'green', 
+            strokeWidth: 2, 
+            draggable: true, 
+            dragBoundFunc(pos){
+                return {
+                x: pos.x, 
+                y: this.absolutePosition().y
+                }
+            }
+        });
+
+        const leftInner = new Konva.Line({
+            points: [15, 0, 15, 300], 
+            stroke: 'green', 
+            strokeWidth: 2, 
+            draggable: true, 
+            dragBoundFunc(pos){
+                return {
+                x: pos.x, 
+                y: this.absolutePosition().y
+                }
+            }, 
+            dash: [20,5]
+        });
+
+        const rightOuter = new Konva.Line({
+            points: [495, 0, 495, 300], 
+            stroke: 'orange', 
+            strokeWidth: 2, 
+            draggable: true, 
+            dragBoundFunc(pos){
+                return {
+                x: pos.x, 
+                y: this.absolutePosition().y
+                }
+            }
+        });
+
+        const rightInner = new Konva.Line({
+            points: [485, 0, 485, 300], 
+            stroke: 'orange', 
+            strokeWidth: 2, 
+            draggable: true, 
+            dragBoundFunc(pos){
+                return {
+                x: pos.x, 
+                y: this.absolutePosition().y
+                }
+            }, 
+            dash: [20,5]
+        });
+
+
+
+        // bottomOuter.on('dragmove', () => {
+
+        //    if(
+        //        (bottomOuter.absolutePosition().y + 250) <=
+        //        topOuter.absolutePosition().y
+        //    ){
+        //         console.log('exceeding...');
+        //         bottomOuter.draggable(false);
+        //         bottomOuter.position({
+        //             x:0, 
+        //             y:0
+        //         });
+        //         bottomOuter.draggable(true);
+        //    }
+        // });
+
+        layer.add(topOuter);
+        layer.add(topInner);
+        layer.add(bottomOuter);
+        layer.add(bottomInner);
+        layer.add(leftOuter);
+        layer.add(leftInner);
+        layer.add(rightOuter);
+        layer.add(rightInner);
+        stage.add(layer);
+        layer.draw();
+    }
+</script>
+</body>
+</html>
