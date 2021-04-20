@@ -6,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
+    body{
+      min-height: 100vh;
+      
+    }
     .outer{
         width:500px;
         position:relative;
@@ -20,19 +24,54 @@
         z-index:5;
     }
 
+    #dragon{
+        margin: 400px auto;
+    }
+
     .image{
         width:500px;
         position:absolute;
         left:0;
         top:0;
     }
+    .box{
+        width: 500px;
+        height: 200px;
+        background: green;
+        transform: skew(22deg, 0deg);
+    }
+    .droptarget {
+  float: left; 
+  width: 100px; 
+  height: 35px;
+  margin: 15px;
+  padding: 10px;
+  border: 1px solid #aaaaaa;
+}
 </style>
 </head>
 <body>
   <div class="outer">
     <div id="container"></div>
   </div>
-  <script src="https://unpkg.com/konva@7.0.3/konva.min.js" defer></script>
+  <div class="box">
+      test
+  </div>
+  <section id="dragon">
+    <p>Drag the p element back and forth between the two rectangles:</p>
+
+    <div class="droptarget" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <p ondragstart="dragStart(event)" ondrag="dragging(event)" draggable="true" id="dragtarget">Drag me!</p>
+    </div>
+    
+    <div class="droptarget" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    
+    <p style="clear:both;"><strong>Note:</strong> drag events are not supported in Internet Explorer 8 and earlier versions or Safari 5.1 and earlier versions.</p>
+    
+    <p id="demo"></p>
+  </section>
+
+  <script src="https://unpkg.com/konva@7.0.3/konva.min.js"></script>
   <script>
 
     const outerContainer = document.querySelector('.outer');
@@ -58,7 +97,7 @@
         // kContainerWidth = 500;
         // kContainerHeight = image.style.height;
 
-        outerContainer.insertAdjacentElement('beforeend',image);
+        // outerContainer.insertAdjacentElement('beforeend',image);
         
         // console.log('image width:', image.style.width);
         // console.log('image height: ', image.style.height);
@@ -78,8 +117,10 @@
 
         const stage = new Konva.Stage({
         container: '#container', 
-        width: kContainerWidth, 
-        height: kContainerHeight
+        width: 500, 
+        height: 500
+        // width: kContainerWidth, 
+        // height: kContainerHeight
         });
 
         const layer = new Konva.Layer();
@@ -154,7 +195,7 @@
         // ============== Bottom Outer ================
 
         const bottomOuter = new Konva.Line({
-            points: [0, 295, 500, 295], 
+            points: [0, 295, 500, 420], 
             stroke: 'red', 
             strokeWidth: 2, 
             text: 'bottom outer',
@@ -237,6 +278,12 @@
             dash: [20,5]
         });
 
+        const footerLines = new Konva.Line({
+            points: [0, 5, 500, 420], 
+            stroke: 'orange', 
+            strokeWidth: 5, 
+            lineCap: 'square'
+        });
 
 
         // bottomOuter.on('dragmove', () => {
@@ -263,9 +310,30 @@
         layer.add(leftInner);
         layer.add(rightOuter);
         layer.add(rightInner);
+        layer.add(footerLines)
         stage.add(layer);
         layer.draw();
     }
+    konvaInit()
+    function dragStart(event) {
+  event.dataTransfer.setData("Text", event.target.id);
+}
+
+function dragging(event) {
+  document.getElementById("demo").innerHTML = "The p element is being dragged";
+}
+
+function allowDrop(event) {
+  event.preventDefault();
+}
+
+function drop(event) {
+  event.preventDefault();
+  var data = event.dataTransfer.getData("Text");
+  event.target.appendChild(document.getElementById(data));
+  document.getElementById("demo").innerHTML = "The p element was dropped";
+}
 </script>
 </body>
 </html>
+
